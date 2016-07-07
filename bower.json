@@ -1,0 +1,20 @@
+{
+  "name": "ogs-stones-captured",
+  "homepage": "https://github.com/crodgers/ogs-stones-captured",
+  "authors": [
+    "Christopher Douglas Rodgers <christopher.douglas.rodgers@gmail.com>"
+  ],
+  "description": "A custom element that keeps track of captured stones for a game on OGS",
+  "main": "ogs-stones-captured.html",
+  "keywords": [
+    "OGS"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
