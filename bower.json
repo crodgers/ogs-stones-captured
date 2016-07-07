@@ -18,8 +18,8 @@
     "tests"
   ],
   "dependencies": {
-    "wgo.js": "waltheri/wgo.js",
     "polymer": "Polymer/polymer#^1.2.0",
-    "socket.io-client": "^1.4.8"
+    "socket.io-client": "^1.4.8",
+    "tenuki": "aprescott/tenuki.js#^0.2.1"
   }
 }

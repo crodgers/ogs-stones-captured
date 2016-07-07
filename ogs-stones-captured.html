@@ -8,7 +8,7 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="./bower_components/polymer/polymer.html">
 
 <dom-module id="ogs-stones-captured">
   <template>
@@ -16,8 +16,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       :host {
         display: block;
       }
+      
+      #tenukiBoard {
+        display: block;
+      }
     </style>
-    <div>Hello from <span>{{foo}}</span></div>
+    <link rel="stylesheet" href="./bower_components/tenuki/build/tenuki.css" type="text/css" />
+    <div id="tenukiBoard" class="tenuki-board"></div>
+    <div>Hello from <span>ogs-stones-captured</span></div>
+    <span>{{captured}}</span>
   </template>
   <script>
   (function() {
@@ -31,20 +38,43 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: String,
           value: '5753506',
           notify: true
+        },
+        
+        color: {
+          type: String,
+          value: "b",
+          notify: false
+        },
+        
+        captured: {
+          type: Number,
+          value: 0,
+          notify: true
         }
       },
       
       ready: function() {
+        
+        var board = this.$.tenukiBoard;
+        var game = new tenuki.Game(board);
+        game.setup();
+        
+        console.log(game);
+        
         var element_scope = this;
         var socket = io.connect("https://ggs.online-go.com");
         socket.emit("game/connect", {"game_id": element_scope.game_id});
         socket.on("game/" + element_scope.game_id + "/gamedata", function(gamedata) {
           console.log(gamedata);
+          gamedata.moves.forEach(function (move, index, array) {
+            game.playAt(move[0], move[1]);
+            console.log(game._moves[game._moves.length - 1].whiteStonesCaptured);
+          });
         });
       }
     });
   })();
   </script>
   <script type="text/javascript" src="./bower_components/socket.io-client/socket.io.js"></script>
-  <script type="text/javascript" src="./bower_components/wgo.js/wgo/wgo.js"></script>
+  <script type="text/javascript" src="./bower_components/tenuki/build/tenuki.js"></script>
 </dom-module>
