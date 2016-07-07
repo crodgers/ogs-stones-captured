@@ -27,13 +27,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'ogs-stones-captured',
 
       properties: {
-        foo: {
+        game_id: {
           type: String,
-          value: 'ogs-stones-captured',
+          value: '5753506',
           notify: true
         }
+      },
+      
+      ready: function() {
+        var element_scope = this;
+        var socket = io.connect("https://ggs.online-go.com");
+        socket.emit("game/connect", {"game_id": element_scope.game_id});
+        socket.on("game/" + element_scope.game_id + "/gamedata", function(gamedata) {
+          console.log(gamedata);
+        });
       }
     });
   })();
   </script>
+  <script type="text/javascript" src="./bower_components/socket.io-client/socket.io.js"></script>
+  <script type="text/javascript" src="./bower_components/wgo.js/wgo/wgo.js"></script>
 </dom-module>

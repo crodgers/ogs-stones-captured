@@ -16,5 +16,10 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "wgo.js": "waltheri/wgo.js",
+    "polymer": "Polymer/polymer#^1.2.0",
+    "socket.io-client": "^1.4.8"
+  }
 }
