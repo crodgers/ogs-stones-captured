@@ -9,22 +9,37 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="./bower_components/polymer/polymer.html">
+<link rel="import" href="./bower_components/paper-material/paper-material.html">
+<link rel="import" href="./bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
 <dom-module id="ogs-stones-captured">
   <template>
     <style>
       :host {
         display: block;
+        width: 25%;
       }
       
       #tenukiBoard {
         display: block;
+        @apply(--tenuki-board);
+      }
+      
+      #captured {
+        font-size: 40px;
+        @apply(--captured-stones);
       }
     </style>
+    <style is="custom-style" include="iron-flex iron-flex-alignment"></style>
     <link rel="stylesheet" href="./bower_components/tenuki/build/tenuki.css" type="text/css" />
     <div id="tenukiBoard" class="tenuki-board"></div>
-    <div>Hello from <span>ogs-stones-captured</span></div>
-    <span>{{captured}}</span>
+    
+    <paper-material>
+      <span id="captured"
+            class="flex layout horizontal center-justified">{{captured}}
+      </span>
+    </paper-material>
+
   </template>
   <script>
   (function() {
@@ -36,13 +51,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       properties: {
         game_id: {
           type: String,
-          value: '5753506',
+          value: '5769916',
           notify: true
         },
         
         color: {
           type: String,
-          value: "b",
+          value: "black",
           notify: false
         },
         
@@ -59,18 +74,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var game = new tenuki.Game(board);
         game.setup();
         
-        console.log(game);
-        
         var element_scope = this;
         var socket = io.connect("https://ggs.online-go.com");
         socket.emit("game/connect", {"game_id": element_scope.game_id});
         socket.on("game/" + element_scope.game_id + "/gamedata", function(gamedata) {
-          console.log(gamedata);
           gamedata.moves.forEach(function (move, index, array) {
-            game.playAt(move[0], move[1]);
-            console.log(game._moves[game._moves.length - 1].whiteStonesCaptured);
+            game.playAt(move[1], move[0]);
+            element_scope._updateCaptured(game);
+            
           });
         });
+        socket.on("game/" + element_scope.game_id + "/move", function(move) {
+          game.playAt(move.move[1], move.move[0]);
+          element_scope._updateCaptured(game);
+        })
+      },
+      
+      _updateCaptured: function(game) {
+        if (this.color == "black") {
+          this.set('captured', game._moves[game._moves.length - 1].whiteStonesCaptured)
+        }
+        
+        else {
+          this.set('captured', game._moves[game._moves.length - 1].blackStonesCaptured)
+        }
       }
     });
   })();
