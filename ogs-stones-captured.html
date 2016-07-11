@@ -104,11 +104,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       
       _updateCaptured: function() {
         if (this.color == "black") {
-          this.set('captured', this.game._moves[game._moves.length - 1].whiteStonesCaptured)
+          this.set('captured', this.game._moves[this.game._moves.length - 1].whiteStonesCaptured)
         }
         
         else {
-          this.set('captured', this.game._moves[game._moves.length - 1].blackStonesCaptured)
+          this.set('captured', this.game._moves[this.game._moves.length - 1].blackStonesCaptured)
         }
       }
     });
