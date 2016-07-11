@@ -102,7 +102,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this._updateCaptured();
       },
       
-      _updateCaptured: function(game) {
+      _updateCaptured: function() {
         if (this.color == "black") {
           this.set('captured', this.game._moves[game._moves.length - 1].whiteStonesCaptured)
         }
