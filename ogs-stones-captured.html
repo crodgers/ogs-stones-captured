@@ -65,38 +65,48 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: Number,
           value: 0,
           notify: true
+        },
+        
+        game: {
+          type: Object,
+          value: {}
         }
       },
       
-      ready: function() {
-        
+      listeners: {
+        'gameLoaded': 'gameLoaded',
+        'move': 'move',
+        'undo': 'undo'
+      },
+  
+      gameLoaded: function(gamedata) {
         var board = this.$.tenukiBoard;
-        var game = new tenuki.Game(board);
-        game.setup();
+        this.game = new tenuki.Game(board);
+        this.game.setup();
         
-        var element_scope = this;
-        var socket = io.connect("https://ggs.online-go.com");
-        socket.emit("game/connect", {"game_id": element_scope.game_id});
-        socket.on("game/" + element_scope.game_id + "/gamedata", function(gamedata) {
-          gamedata.moves.forEach(function (move, index, array) {
-            game.playAt(move[1], move[0]);
-            element_scope._updateCaptured(game);
-            
+        gamedata.detail.moves.forEach(function (move, index, array) {
+            this.game.playAt(move[1], move[0]);
+            this._updateCaptured();
           });
-        });
-        socket.on("game/" + element_scope.game_id + "/move", function(move) {
-          game.playAt(move.move[1], move.move[0]);
-          element_scope._updateCaptured(game);
-        })
+      },
+      
+      move: function(move) {
+        this.game.playAt(move.detail.move[1], move.detail.move[0]);
+        this._updateCaptured();
+      },
+      
+      undo: function(undo) {
+        this.game.undo();
+        this._updateCaptured();
       },
       
       _updateCaptured: function(game) {
         if (this.color == "black") {
-          this.set('captured', game._moves[game._moves.length - 1].whiteStonesCaptured)
+          this.set('captured', this.game._moves[game._moves.length - 1].whiteStonesCaptured)
         }
         
         else {
-          this.set('captured', game._moves[game._moves.length - 1].blackStonesCaptured)
+          this.set('captured', this.game._moves[game._moves.length - 1].blackStonesCaptured)
         }
       }
     });
