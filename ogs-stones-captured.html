@@ -84,7 +84,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.game = new tenuki.Game(board);
         this.game.setup();
         
-        element_scope = this;
+        var element_scope = this;
         
         gamedata.detail.moves.forEach(function (move, index, array) {
             element_scope.game.playAt(move[1], move[0]);
